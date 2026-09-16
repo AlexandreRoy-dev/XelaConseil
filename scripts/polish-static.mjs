@@ -120,18 +120,16 @@ function polishHtml(html, file) {
     ""
   );
 
-  // Helper script: skip recaptcha gate for local demo submit
+  // Form posts to Formspree (see js/form-to-client.js)
+  const formScript = `<script src="${prefix}js/form-to-client.js" defer></script>`;
+  if (!out.includes("js/form-to-client.js")) {
+    out = out.replace(/<\/body>/i, formScript + "\n</body>");
+  }
+
+  // Helper script: upgrade lazy images
   const inject = `
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('form[id^="gform_"]').forEach(function (form) {
-    form.addEventListener('submit', function (e) {
-      // Allow native navigation to confirmation page
-      var btn = form.querySelector('[type="submit"]');
-      if (btn) btn.disabled = false;
-    }, true);
-  });
-  // Upgrade lazy srcset placeholders if theme script misses them
   document.querySelectorAll('img[srcset][sizes="1px"]').forEach(function (img) {
     var src = img.getAttribute('src');
     if (src) {
@@ -143,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 `;
-  if (!out.includes("Upgrade lazy srcset placeholders")) {
+  if (!out.includes("Upgrade lazy srcset placeholders") && !out.includes("img[srcset][sizes=\"1px\"]")) {
     out = out.replace(/<\/body>/i, inject + "\n</body>");
   }
 

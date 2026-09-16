@@ -23,7 +23,7 @@ Then open http://localhost:4173
 ## Notes
 
 - Visual/layout parity uses the original Reptile theme CSS/JS and media.
-- Gravity Forms markup is preserved for look & feel; submit navigates to the local confirmation page (no WordPress backend).
+- Gravity Forms markup is preserved for look & feel. Submissions go to Formspree (`https://formspree.io/f/xppwajye`) and then to the client inbox configured there.
 - Google Fonts (DM Sans / DM Serif Display) load from Google CDN.
 - Re-crawl: `node scripts/crawl-site.mjs` (writes to `site/`), copy contents to repo root, then `node scripts/polish-static.mjs`
 

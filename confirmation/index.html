@@ -430,14 +430,6 @@ gform.initializeOnLoaded( function() {jQuery(document).trigger("gform_pre_post_r
 	
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('form[id^="gform_"]').forEach(function (form) {
-    form.addEventListener('submit', function (e) {
-      // Allow native navigation to confirmation page
-      var btn = form.querySelector('[type="submit"]');
-      if (btn) btn.disabled = false;
-    }, true);
-  });
-  // Upgrade lazy srcset placeholders if theme script misses them
   document.querySelectorAll('img[srcset][sizes="1px"]').forEach(function (img) {
     var src = img.getAttribute('src');
     if (src) {
@@ -449,5 +441,6 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 </script>
 
+<script src="../js/form-to-client.js" defer></script>
 </body>
 </html>
