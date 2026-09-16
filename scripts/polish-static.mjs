@@ -109,8 +109,12 @@ function polishHtml(html, file) {
     /<form([^>]*id=['"]gform_1['"][^>]*)>/i,
     `<form method="get" id="gform_1" action="${confirmPath}" data-formid="1" novalidate>`
   );
+  out = out.replace(
+    /<form([^>]*id=['"]gform_2['"][^>]*)>/i,
+    `<form method="post" enctype="multipart/form-data" id="gform_2" class="normal-form" action="${confirmPath}" data-formid="2" novalidate>`
+  );
   // Remove ajax target / onclick that blocks static submit
-  out = out.replace(/\s*target=['"]gform_ajax_frame_1['"]/gi, "");
+  out = out.replace(/\s*target=['"]gform_ajax_frame_[12]['"]/gi, "");
   out = out.replace(
     /onclick=['"]gform\.submission\.handleButtonClick\(this\);['"]/gi,
     ""

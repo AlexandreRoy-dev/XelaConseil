@@ -154,10 +154,9 @@
     });
   }
 
-  function confirmationUrl(form) {
-    var action = form.getAttribute("action") || "";
-    if (action) return action;
-    return form.id === "gform_2" ? "../confirmation/index.html" : "./confirmation/index.html";
+  function confirmationUrl() {
+    var parts = window.location.pathname.replace(/\/index\.html$/i, "").split("/").filter(Boolean);
+    return parts.length === 0 ? "./confirmation/index.html" : "../confirmation/index.html";
   }
 
   function bind(form, spec, kind) {
@@ -183,6 +182,10 @@
 
         var fileField = spec.file ? form.elements.namedItem(spec.file) : null;
         var file = fileField && fileField.files && fileField.files[0] ? fileField.files[0] : null;
+        if (spec.required.indexOf("file") !== -1 && !file) {
+          setStatus(form, "Ajoutez votre fichier.", true);
+          return;
+        }
         if (file && file.size > 5 * 1024 * 1024) {
           setStatus(form, "Le fichier doit faire moins de 5 Mo.", true);
           return;
@@ -194,7 +197,7 @@
 
         send(payload, file)
           .then(function () {
-            window.location.assign(confirmationUrl(form));
+            window.location.assign(confirmationUrl());
           })
           .catch(function () {
             if (button) button.disabled = false;
@@ -209,15 +212,27 @@
     );
   }
 
-  document.addEventListener("DOMContentLoaded", function () {
+  function specFor(form) {
+    var id = form.getAttribute("data-formid") || form.id.replace(/^gform_/, "");
+    return id === "2" ? { spec: CAREER, kind: "career" } : { spec: APPOINTMENT, kind: "appointment" };
+  }
+
+  function init() {
     document.querySelectorAll(".ginput_recaptcha, .gfield--type-captcha").forEach(function (el) {
       el.style.display = "none";
     });
 
-    var appointment = document.getElementById("gform_1");
-    if (appointment) bind(appointment, APPOINTMENT, "appointment");
+    document.querySelectorAll('form[id^="gform_"]').forEach(function (form) {
+      if (form.dataset.xelaBound === "1") return;
+      form.dataset.xelaBound = "1";
+      var mapped = specFor(form);
+      bind(form, mapped.spec, mapped.kind);
+    });
+  }
 
-    var career = document.getElementById("gform_2");
-    if (career) bind(career, CAREER, "career");
-  });
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
 })();
