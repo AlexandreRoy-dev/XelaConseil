@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+Disallow: /confirmation/
+Sitemap: https://xelaconseil.ca/sitemap.xml
