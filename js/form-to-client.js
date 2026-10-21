@@ -155,8 +155,7 @@
   }
 
   function confirmationUrl() {
-    var parts = window.location.pathname.replace(/\/index\.html$/i, "").split("/").filter(Boolean);
-    return parts.length === 0 ? "./confirmation/index.html" : "../confirmation/index.html";
+    return "/confirmation/";
   }
 
   function bind(form, spec, kind) {
